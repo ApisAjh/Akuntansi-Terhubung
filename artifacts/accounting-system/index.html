@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinanceBook Pro — Financial Accounting System</title>
+  <link rel="stylesheet" href="/src/style.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- jsPDF + AutoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <!-- SheetJS -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <span class="brand-name">FinanceBook</span>
+    </div>
+    <button class="sidebar-close" id="sidebarClose" title="Close sidebar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">UTAMA</div>
+    <a href="#" class="nav-item active" data-page="dashboard">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dashboard</span>
+    </a>
+    <div class="nav-section-label">TRANSAKSI</div>
+    <a href="#" class="nav-item" data-page="coa">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+      <span>Chart of Accounts</span>
+    </a>
+    <a href="#" class="nav-item" data-page="journal">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>Jurnal Umum</span>
+    </a>
+    <a href="#" class="nav-item" data-page="history">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>Riwayat Transaksi</span>
+    </a>
+    <div class="nav-section-label">LAPORAN</div>
+    <a href="#" class="nav-item" data-page="ledger">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <span>Buku Besar</span>
+    </a>
+    <a href="#" class="nav-item" data-page="trial">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>Trial Balance</span>
+    </a>
+    <a href="#" class="nav-item" data-page="pl">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Laba Rugi</span>
+    </a>
+    <a href="#" class="nav-item" data-page="balance">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span>Neraca</span>
+    </a>
+    <a href="#" class="nav-item" data-page="cashflow">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      <span>Cash Flow</span>
+    </a>
+    <div class="nav-section-label">ANALISIS</div>
+    <a href="#" class="nav-item" data-page="analysis">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Analisis Keuangan</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="company-info">
+      <div class="company-avatar">PT</div>
+      <div class="company-detail">
+        <div class="company-name">PT Contoh Sejahtera</div>
+        <div class="company-period">Periode: <span id="currentYear">2025</span></div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-wrapper" id="mainWrapper">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle" id="menuToggle" title="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="page-title-wrap">
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+        <div class="breadcrumb" id="breadcrumb">FinanceBook Pro / Dashboard</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" class="search-input" id="globalSearch" placeholder="Cari akun, transaksi, ref..." />
+      </div>
+      <button class="icon-btn" id="themeToggle" title="Toggle dark/light mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="btn btn-primary btn-sm" id="newJournalBtn" onclick="openJournalModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Jurnal Baru
+      </button>
+    </div>
+  </header>
+
+  <!-- Pages -->
+  <main class="main-content">
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Ringkasan Keuangan</h2>
+          <p class="page-sub">Pembaruan real-time dari seluruh transaksi tercatat</p>
+        </div>
+        <div class="page-actions">
+          <select class="select-sm" id="dashboardPeriod" onchange="renderDashboard()">
+            <option value="all">Semua Periode</option>
+            <option value="month">Bulan Ini</option>
+            <option value="quarter">Kuartal Ini</option>
+            <option value="year">Tahun Ini</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KPI Cards Row 1 -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-blue">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Aset</div>
+            <div class="kpi-value" id="kpiAssets">Rp 0</div>
+            <div class="kpi-trend" id="kpiAssetsTrend"></div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-red">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Kewajiban</div>
+            <div class="kpi-value" id="kpiLiabilities">Rp 0</div>
+            <div class="kpi-trend" id="kpiLiabTrend"></div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-green">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Ekuitas</div>
+            <div class="kpi-value" id="kpiEquity">Rp 0</div>
+            <div class="kpi-trend" id="kpiEquityTrend"></div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-purple">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Kas &amp; Bank</div>
+            <div class="kpi-value" id="kpiCash">Rp 0</div>
+            <div class="kpi-trend" id="kpiCashTrend"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Cards Row 2 -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-teal">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Pendapatan</div>
+            <div class="kpi-value" id="kpiRevenue">Rp 0</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-orange">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Beban</div>
+            <div class="kpi-value" id="kpiExpenses">Rp 0</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-indigo">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Laba Bersih</div>
+            <div class="kpi-value" id="kpiNetProfit">Rp 0</div>
+          </div>
+        </div>
+        <div class="kpi-card kpi-slate">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Transaksi</div>
+            <div class="kpi-value" id="kpiTransactions">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accounting Equation Check -->
+      <div class="equation-banner" id="equationBanner">
+        <div class="eq-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="eq-text">
+          <strong>Persamaan Akuntansi Seimbang</strong>
+          <span id="equationText">Aset = Kewajiban + Ekuitas</span>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Pemasukan vs Pengeluaran</div>
+            <div class="chart-period">12 Bulan Terakhir</div>
+          </div>
+          <div class="chart-wrap"><canvas id="incomeExpenseChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Arus Kas</div>
+            <div class="chart-period">Bulanan</div>
+          </div>
+          <div class="chart-wrap"><canvas id="cashFlowChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions + Financial Summary -->
+      <div class="bottom-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Transaksi Terbaru</div>
+            <a href="#" class="link-sm" onclick="navigateTo('history')">Lihat Semua</a>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Tanggal</th><th>Deskripsi</th><th>Debit</th><th>Kredit</th></tr></thead>
+              <tbody id="recentTransBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Kondisi Keuangan</div>
+          </div>
+          <div class="financial-summary" id="financialSummary"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHART OF ACCOUNTS PAGE -->
+    <div class="page" id="page-coa">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Chart of Accounts</h2>
+          <p class="page-sub">Kelola akun keuangan perusahaan Anda</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="openAccountModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Akun
+          </button>
+        </div>
+      </div>
+
+      <div class="search-bar-row">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="coaSearch" placeholder="Cari akun..." oninput="renderCOA()" />
+        </div>
+        <select class="select-sm" id="coaFilter" onchange="renderCOA()">
+          <option value="">Semua Kategori</option>
+          <option value="assets">Aset</option>
+          <option value="liabilities">Kewajiban</option>
+          <option value="equity">Ekuitas</option>
+          <option value="revenue">Pendapatan</option>
+          <option value="expenses">Beban</option>
+        </select>
+      </div>
+
+      <div class="coa-groups" id="coaGroups"></div>
+    </div>
+
+    <!-- JOURNAL PAGE -->
+    <div class="page" id="page-journal">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Jurnal Umum</h2>
+          <p class="page-sub">Catat seluruh transaksi keuangan dengan metode double-entry</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('journal', 'pdf')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            PDF
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('journal', 'excel')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Excel
+          </button>
+          <button class="btn btn-primary" onclick="openJournalModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Entri Jurnal
+          </button>
+        </div>
+      </div>
+
+      <div class="search-bar-row">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="journalSearch" placeholder="Cari jurnal..." oninput="renderJournal()" />
+        </div>
+        <input type="date" class="input-sm" id="journalDateFrom" onchange="renderJournal()" />
+        <input type="date" class="input-sm" id="journalDateTo" onchange="renderJournal()" />
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>No. Ref</th>
+                <th>Deskripsi</th>
+                <th>Akun Debit</th>
+                <th>Akun Kredit</th>
+                <th class="text-right">Nominal</th>
+              </tr>
+            </thead>
+            <tbody id="journalBody"></tbody>
+          </table>
+        </div>
+        <div class="table-empty" id="journalEmpty">Belum ada entri jurnal. Klik "Entri Jurnal" untuk mulai.</div>
+      </div>
+    </div>
+
+    <!-- HISTORY PAGE -->
+    <div class="page" id="page-history">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Riwayat Transaksi</h2>
+          <p class="page-sub">Semua transaksi yang telah dicatat</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('history', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('history', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+
+      <div class="search-bar-row">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="historySearch" placeholder="Cari deskripsi, ref, akun..." oninput="renderHistory()" />
+        </div>
+        <input type="date" class="input-sm" id="historyDateFrom" onchange="renderHistory()" />
+        <input type="date" class="input-sm" id="historyDateTo" onchange="renderHistory()" />
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>No. Ref</th>
+                <th>Deskripsi</th>
+                <th>Akun Debit</th>
+                <th>Akun Kredit</th>
+                <th class="text-right">Debit</th>
+                <th class="text-right">Kredit</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <div class="table-empty" id="historyEmpty">Belum ada transaksi.</div>
+      </div>
+    </div>
+
+    <!-- GENERAL LEDGER PAGE -->
+    <div class="page" id="page-ledger">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Buku Besar</h2>
+          <p class="page-sub">Rekap semua transaksi per akun</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('ledger', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('ledger', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+      <div class="search-bar-row">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="ledgerSearch" placeholder="Cari akun..." oninput="renderLedger()" />
+        </div>
+        <select class="select-sm" id="ledgerFilter" onchange="renderLedger()">
+          <option value="">Semua Akun</option>
+          <option value="assets">Aset</option>
+          <option value="liabilities">Kewajiban</option>
+          <option value="equity">Ekuitas</option>
+          <option value="revenue">Pendapatan</option>
+          <option value="expenses">Beban</option>
+        </select>
+      </div>
+      <div id="ledgerContent"></div>
+    </div>
+
+    <!-- TRIAL BALANCE PAGE -->
+    <div class="page" id="page-trial">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Trial Balance</h2>
+          <p class="page-sub">Neraca Saldo — verifikasi keseimbangan buku besar</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('trial', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('trial', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+      <div id="trialContent"></div>
+    </div>
+
+    <!-- P&L PAGE -->
+    <div class="page" id="page-pl">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Laporan Laba Rugi</h2>
+          <p class="page-sub">Profit &amp; Loss Statement</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('pl', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('pl', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+      <div id="plContent"></div>
+    </div>
+
+    <!-- BALANCE SHEET PAGE -->
+    <div class="page" id="page-balance">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Neraca (Balance Sheet)</h2>
+          <p class="page-sub">Posisi keuangan perusahaan</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('balance', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('balance', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+      <div id="balanceContent"></div>
+    </div>
+
+    <!-- CASH FLOW PAGE -->
+    <div class="page" id="page-cashflow">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Laporan Arus Kas</h2>
+          <p class="page-sub">Cash Flow Statement</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-outline btn-sm" onclick="exportData('cashflow', 'pdf')">PDF</button>
+          <button class="btn btn-outline btn-sm" onclick="exportData('cashflow', 'excel')">Excel</button>
+          <button class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
+        </div>
+      </div>
+      <div id="cashflowContent"></div>
+    </div>
+
+    <!-- FINANCIAL ANALYSIS PAGE -->
+    <div class="page" id="page-analysis">
+      <div class="page-header">
+        <div>
+          <h2 class="page-heading">Analisis Keuangan</h2>
+          <p class="page-sub">Rasio dan indikator kesehatan keuangan</p>
+        </div>
+      </div>
+      <div id="analysisContent"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- JOURNAL MODAL -->
+<div class="modal-overlay" id="journalModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" id="journalModalTitle">Entri Jurnal Baru</h3>
+      <button class="modal-close" onclick="closeModal('journalModal')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="journalEditId" />
+      <div class="form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Tanggal <span class="required">*</span></label>
+          <input type="date" class="form-input" id="jDate" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. Referensi</label>
+          <input type="text" class="form-input" id="jRef" placeholder="contoh: JU-001" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deskripsi <span class="required">*</span></label>
+        <input type="text" class="form-input" id="jDesc" placeholder="Deskripsi transaksi..." required />
+      </div>
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label">Akun Debit <span class="required">*</span></label>
+          <select class="form-input" id="jDebitAccount" required>
+            <option value="">-- Pilih Akun --</option>
+          </select>
+          <div class="account-hint" id="jDebitHint"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Akun Kredit <span class="required">*</span></label>
+          <select class="form-input" id="jCreditAccount" required>
+            <option value="">-- Pilih Akun --</option>
+          </select>
+          <div class="account-hint" id="jCreditHint"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nominal <span class="required">*</span></label>
+          <div class="input-prefix">
+            <span class="prefix">Rp</span>
+            <input type="number" class="form-input has-prefix" id="jAmount" placeholder="0" min="1" required />
+          </div>
+        </div>
+      </div>
+      <div class="balance-check" id="balanceCheck">
+        <div class="balance-row"><span>Debit</span><span id="checkDebit">Rp 0</span></div>
+        <div class="balance-row"><span>Kredit</span><span id="checkCredit">Rp 0</span></div>
+        <div class="balance-status" id="balanceStatus"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('journalModal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveJournal()">Simpan Jurnal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACCOUNT MODAL -->
+<div class="modal-overlay" id="accountModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3 class="modal-title" id="accountModalTitle">Tambah Akun Baru</h3>
+      <button class="modal-close" onclick="closeModal('accountModal')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="accountEditId" />
+      <div class="form-group">
+        <label class="form-label">Kode Akun <span class="required">*</span></label>
+        <input type="text" class="form-input" id="aCode" placeholder="contoh: 1001" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Akun <span class="required">*</span></label>
+        <input type="text" class="form-input" id="aName" placeholder="contoh: Kas" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori <span class="required">*</span></label>
+        <select class="form-input" id="aCategory" required>
+          <option value="">-- Pilih Kategori --</option>
+          <option value="assets">Aset</option>
+          <option value="liabilities">Kewajiban</option>
+          <option value="equity">Ekuitas</option>
+          <option value="revenue">Pendapatan</option>
+          <option value="expenses">Beban</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sub-Kategori</label>
+        <select class="form-input" id="aSubCategory">
+          <option value="">-- Pilih Sub-Kategori --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Keterangan</label>
+        <input type="text" class="form-input" id="aDesc" placeholder="Keterangan tambahan..." />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('accountModal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveAccount()">Simpan Akun</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal modal-xs">
+    <div class="modal-header">
+      <h3 class="modal-title">Konfirmasi Hapus</h3>
+      <button class="modal-close" onclick="closeModal('confirmModal')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmText">Apakah Anda yakin ingin menghapus data ini?</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Batal</button>
+      <button class="btn btn-danger" id="confirmBtn">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/src/script.js"></script>
+</body>
+</html>

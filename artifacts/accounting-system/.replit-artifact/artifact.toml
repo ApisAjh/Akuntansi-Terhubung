@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Financial Accounting System"
+description = "A professional web-based Financial Accounting System inspired by MYOB, Accurate, and Jurnal.id. Built with pure HTML, CSS, and JavaScript. Features double-entry accounting, chart of accounts, general journal, general ledger, trial balance, profit & loss, balance sheet, cash flow, transaction history, financial analysis, dark/light mode, and export capabilities."
+version = "1.0.0"
+id = "artifacts/accounting-system"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20889
+
+[services.development]
+run = "pnpm --filter @workspace/accounting-system run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/accounting-system", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/accounting-system/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20889"
+BASE_PATH = "/"
