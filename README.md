@@ -6,8 +6,8 @@
 
 A modern accounting application built to simplify bookkeeping, journal entries, financial reporting, and business financial management.
 
-![GitHub last commit](https://img.shields.io/github/last-commit/Akuntansi-Terhubung)
-![GitHub repo size](https://img.shields.io/github/repo-size/Akuntansi-Terhubung)
+![GitHub last commit](https://img.shields.io/github/last-commit/ApisAjh/Akuntansi-Terhubung)
+![GitHub repo size](https://img.shields.io/github/repo-size/ApisAjh/Akuntansi-Terhubung)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)
 ![Status](https://img.shields.io/badge/status-Active-success)
